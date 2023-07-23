@@ -1,0 +1,30 @@
+version: "3"
+
+volumes:
+  my_postgres_volume:
+
+services:
+  db:
+    image: postgres
+    container_name: restaurant_db
+    volumes:
+      - my_postgres_volume:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "pgpass"
+      POSTGRES_USER: "postgres"
+    command: -p 5433
+
+  app:
+    build: .
+    environment:
+      POSTGRES_HOST: "db"
+      POSTGRES_PASSWORD: "pgpass"
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "postgres"
+      POSTGRES_PORT: "5433"
+      HOST: "0.0.0.0"
+
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
